@@ -35,10 +35,27 @@ public class ComposantServlet extends HttpServlet {
 
         } catch (SQLException e) {
             e.printStackTrace();
+<<<<<<< Updated upstream:src/main/java/org/projets3s5/atelier/Controleur/ComposantServlet.java
             // Si une exception se produit, envoyer une erreur
             request.setAttribute("error", "Une erreur est survenue lors de la récupération des composants.");
             request.getRequestDispatcher("/WEB-INF/error.jsp").forward(request, response);
         }
+=======
+            request.setAttribute("error", "Une erreur est survenue lors de la récupération des composants :" +e.getMessage());
+            request.getRequestDispatcher("error.jsp").forward(request, response);
+        }
+        finally {
+            try {
+                if (connection != null){
+                    connection.close();
+                }
+            }
+            catch (Exception e){
+                request.setAttribute("error", "Une erreur est survenue lors du la fermeture connection :" +e.getMessage());
+                request.getRequestDispatcher("error.jsp").forward(request, response);
+            }
+        }
+>>>>>>> Stashed changes:src/main/java/org/projets3s5/atelier/controller/ComposantServlet.java
     }
 
     // Méthode doGet pour gérer les requêtes GET

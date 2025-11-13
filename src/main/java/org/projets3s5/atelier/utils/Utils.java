@@ -21,7 +21,26 @@ public class Utils {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         return (Date) formatter.parse(dateStr);
     }
+    public static Date convertToDate(String dateString) {
+        if (dateString == null || dateString.isEmpty()) {
+            return null;  // Retourner null si la date est vide
+        }
 
+        // Définir le format de la date attendu dans le String
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // Format 'yyyy-MM-dd'
+
+        try {
+            // Convertir le String en java.util.Date
+            java.util.Date utilDate = sdf.parse(dateString);
+
+            // Convertir en java.sql.Date
+            return new Date(utilDate.getTime());
+        } catch (ParseException e) {
+            // Gérer l'exception si le format de la date est incorrect
+            e.printStackTrace();
+            return null;
+        }
+    }
     /**
      * Convertit une chaîne au format yyyy-MM-dd en un objet java.sql.Date.
      */

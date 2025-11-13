@@ -69,10 +69,9 @@ public class TypeProbleme {
     }
 
     public void insert(Connection connection) throws SQLException {
-        String query = "INSERT INTO TypeProbleme (id_type_probleme, val) VALUES (?, ?)";
+        String query = "INSERT INTO TypeProbleme (val) VALUES ( ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setString(1, this.idTypeProbleme);
-            pstmt.setString(2, this.val);
+            pstmt.setString(1, this.val);
             pstmt.executeUpdate();
         }
     }

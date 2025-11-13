@@ -75,6 +75,21 @@ CREATE TABLE Employe(
    FOREIGN KEY(id_poste) REFERENCES Poste(id_poste)
 );
 
+CREATE TABLE type_retour(
+   id_type_retour VARCHAR(50)  default  'TPR'  || LPAD(nextval('type_retour_id_seq')::text,5,'0'),,
+   val VARCHAR(255)  NOT NULL,
+   PRIMARY KEY(id_type_retour)
+);
+
+CREATE TABLE Recommandation(
+   id_recommandation VARCHAR(50)  default  'REC'  || LPAD(nextval('recommandation_id_seq')::text,5,'0'),
+   mois INTEGER NOT NULL,
+   annee INTEGER NOT NULL,
+   id_composant VARCHAR(50) ,
+   PRIMARY KEY(id_recommandation),
+   FOREIGN KEY(id_composant) REFERENCES Composant(id_composant)
+);
+
 CREATE TABLE Ordinateur(
    id_ordinateur VARCHAR(50)  default  'ORD'  || LPAD(nextval('ordinateur_id_seq')::text,5,'0'),
    marque VARCHAR(255)  NOT NULL,
@@ -135,6 +150,18 @@ CREATE TABLE Achat(
    PRIMARY KEY(id_achat),
    FOREIGN KEY(id_fournisseur) REFERENCES Fournisseur(id_fournisseur),
    FOREIGN KEY(id_composant) REFERENCES Composant(id_composant)
+);
+
+CREATE TABLE Retour(
+   id_retour VARCHAR(50)  default  'RET'  || LPAD(nextval('retour_id_seq')::text,5,'0'),
+   description VARCHAR(255)  NOT NULL,
+   id_composant VARCHAR(50)  NOT NULL,
+   id_type_retour VARCHAR(50)  NOT NULL,
+   id_reparation_details VARCHAR(50)  NOT NULL,
+   PRIMARY KEY(id_retour),
+   FOREIGN KEY(id_composant) REFERENCES Composant(id_composant),
+   FOREIGN KEY(id_type_retour) REFERENCES type_retour(id_type_retour),
+   FOREIGN KEY(id_reparation_details) REFERENCES ReparationDetails(id_reparation_details)
 );
 
 CREATE TABLE MvtStock(

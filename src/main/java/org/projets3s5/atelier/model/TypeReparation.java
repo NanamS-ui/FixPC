@@ -69,10 +69,9 @@ public class TypeReparation {
     }
 
     public void insert(Connection connection) throws SQLException {
-        String query = "INSERT INTO TypeReparation (id_type_reparation, val) VALUES (?, ?)";
+        String query = "INSERT INTO TypeReparation ( val) VALUES (?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setString(1, this.idTypeReparation);
-            pstmt.setString(2, this.val);
+            pstmt.setString(1, this.val);
             pstmt.executeUpdate();
         }
     }

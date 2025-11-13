@@ -1,5 +1,7 @@
 package org.projets3s5.atelier.model;
 
+import org.projets3s5.atelier.utils.Utils;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,6 +26,7 @@ public class Reparation {
         this.status = status;
         this.idOrdinateur = idOrdinateur;
     }
+
 
     public String getIdReparation() {
         return idReparation;
@@ -106,13 +109,12 @@ public class Reparation {
 
     // Méthode pour insérer une nouvelle réparation
     public void insert(Connection connection) throws SQLException {
-        String query = "INSERT INTO Reparation (id_reparation, date_reparation, description, status, id_ordinateur) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Reparation ( date_reparation, description, status, id_ordinateur) VALUES (?, ?, ?, ? )";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setString(1, this.idReparation);
-            pstmt.setString(2, this.dateReparation);
-            pstmt.setString(3, this.description);
-            pstmt.setString(4, this.status);
-            pstmt.setString(5, this.idOrdinateur);
+            pstmt.setDate(1, Utils.convertToDate(this.dateReparation));
+            pstmt.setString(2, this.description);
+            pstmt.setString(3, this.status);
+            pstmt.setString(4, this.idOrdinateur);
             pstmt.executeUpdate();
         }
     }
@@ -121,11 +123,11 @@ public class Reparation {
     public void update(Connection connection, String id) throws SQLException {
         String query = "UPDATE Reparation SET date_reparation = ?, description = ?, status = ?, id_ordinateur = ? WHERE id_reparation = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setString(1, this.dateReparation);
+            pstmt.setDate(1, Utils.convertToDate(this.dateReparation));
             pstmt.setString(2, this.description);
             pstmt.setString(3, this.status);
             pstmt.setString(4, this.idOrdinateur);
-            pstmt.setString(5, id);
+            pstmt.setString(6, id);
             pstmt.executeUpdate();
         }
     }

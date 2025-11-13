@@ -10,6 +10,7 @@ import java.util.List;
 public class Composant {
     private String idComposant;
     private String nom;
+<<<<<<< Updated upstream
     private double prixAchat;
     private double prixVente;
     private String idTypeComposant;
@@ -23,6 +24,16 @@ public class Composant {
         this.prixAchat = prixAchat;
         this.prixVente = prixVente;
         this.idTypeComposant = idTypeComposant;
+=======
+    private String img;
+    public Composant() {
+    }
+
+    public Composant(String idComposant, String nom, String img) {
+        this.idComposant = idComposant;
+        this.nom = nom;
+        this.img = img;
+>>>>>>> Stashed changes
     }
 
     public String getIdComposant() {
@@ -41,6 +52,7 @@ public class Composant {
         this.nom = nom;
     }
 
+<<<<<<< Updated upstream
     public double getPrixAchat() {
         return prixAchat;
     }
@@ -59,6 +71,10 @@ public class Composant {
 
     public String getIdTypeComposant() {
         return idTypeComposant;
+=======
+    public String getImg() {
+        return img;
+>>>>>>> Stashed changes
     }
 
     public void setIdTypeComposant(String idTypeComposant) {
@@ -74,10 +90,15 @@ public class Composant {
             while (rs.next()) {
                 composants.add(new Composant(
                         rs.getString("id_composant"),
+<<<<<<< Updated upstream
                         rs.getString("nom"),
                         rs.getDouble("prix_achat"),
                         rs.getDouble("prix_vente"),
                         rs.getString("id_type_composant")
+=======
+                        rs.getString("val"),
+                        rs.getString("img")
+>>>>>>> Stashed changes
                 ));
             }
         }
@@ -93,10 +114,15 @@ public class Composant {
                 if (rs.next()) {
                     return new Composant(
                             rs.getString("id_composant"),
+<<<<<<< Updated upstream
                             rs.getString("nom"),
                             rs.getDouble("prix_achat"),
                             rs.getDouble("prix_vente"),
                             rs.getString("id_type_composant")
+=======
+                            rs.getString("val"),
+                            rs.getString("img")
+>>>>>>> Stashed changes
                     );
                 }
             }
@@ -106,6 +132,7 @@ public class Composant {
 
     // Méthode pour insérer un nouveau composant
     public void insert(Connection connection) throws SQLException {
+<<<<<<< Updated upstream
         String query = "INSERT INTO Composant (id_composant, nom, prix_achat, prix_vente, id_type_composant) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, this.idComposant);
@@ -113,18 +140,31 @@ public class Composant {
             pstmt.setDouble(3, this.prixAchat);
             pstmt.setDouble(4, this.prixVente);
             pstmt.setString(5, this.idTypeComposant);
+=======
+        String query = "INSERT INTO Composant (val, img) VALUES ( ?, ?)";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, this.nom);
+            pstmt.setString(2, this.img);
+>>>>>>> Stashed changes
             pstmt.executeUpdate();
         }
     }
 
     // Méthode pour mettre à jour un composant existant
     public void update(Connection connection, String id) throws SQLException {
+<<<<<<< Updated upstream
         String query = "UPDATE Composant SET nom = ?, prix_achat = ?, prix_vente = ?, id_type_composant = ? WHERE id_composant = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, this.nom);
             pstmt.setDouble(2, this.prixAchat);
             pstmt.setDouble(3, this.prixVente);
             pstmt.setString(4, this.idTypeComposant);
+=======
+        String query = "UPDATE Composant SET nom = ?, img = ? WHERE id_composant = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, this.nom);
+            pstmt.setString(4, this.img);
+>>>>>>> Stashed changes
             pstmt.setString(5, id);
             pstmt.executeUpdate();
         }
@@ -137,5 +177,23 @@ public class Composant {
             pstmt.setString(1, id);
             pstmt.executeUpdate();
         }
+    }
+
+    public static List<Composant> getComposantsByType(Connection connection, String idTypeReparation) throws SQLException {
+        List<Composant> composants = new ArrayList<>();
+
+        String query = "SELECT * FROM composants WHERE id_type_reparation = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, idTypeReparation);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Composant composant = new Composant();
+                    composant.setIdComposant(rs.getString("id_composant"));
+                    composant.setNom(rs.getString("nom"));
+                    composants.add(composant);
+                }
+            }
+        }
+        return composants;
     }
 }

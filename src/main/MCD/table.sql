@@ -38,11 +38,27 @@ CREATE TABLE TypeProbleme(
                              PRIMARY KEY(id_type_probleme)
 );
 
+<<<<<<< Updated upstream
 CREATE TABLE TypeComposant(
                               id_type_composant VARCHAR(50)  default  'TYC'  || LPAD(nextval('type_composant_id_seq')::text,5,'0'),
                               val VARCHAR(255)  NOT NULL,
                               description VARCHAR(255) ,
                               PRIMARY KEY(id_type_composant)
+=======
+CREATE TABLE Composant(
+                          id_composant VARCHAR(50)  default  'COM'  || LPAD(nextval('composant_id_seq')::text,5,'0'),
+                          val VARCHAR(255)  NOT NULL,
+                          img VARCHAR(50)  NOT NULL,
+                          PRIMARY KEY(id_composant)
+);
+
+CREATE TABLE Stock(
+                      id_stock VARCHAR(50)  default  'STK'  || LPAD(nextval('stock_id_seq')::text,5,'0'),
+                      quantite_disponible INTEGER NOT NULL,
+                      id_composant VARCHAR(50) ,
+                      PRIMARY KEY(id_stock),
+                      FOREIGN KEY(id_composant) REFERENCES Composant(id_composant)
+>>>>>>> Stashed changes
 );
 
 CREATE TABLE Fournisseur(
@@ -57,6 +73,31 @@ CREATE TABLE TypeReparation(
                                PRIMARY KEY(id_type_reparation)
 );
 
+<<<<<<< Updated upstream
+=======
+CREATE TABLE Poste(
+                      id_poste VARCHAR(50)  default  'POS'  || LPAD(nextval('poste_id_seq')::text,5,'0'),
+                      val VARCHAR(50)  NOT NULL,
+                      salaire NUMERIC(18,2)   NOT NULL,
+                      PRIMARY KEY(id_poste)
+);
+
+CREATE TABLE Employe(
+                        id_employe VARCHAR(50)  default  'EMP'  || LPAD(nextval('employe_id_seq')::text,5,'0'),
+                        nom VARCHAR(255)  NOT NULL,
+                        prenom VARCHAR(50)  NOT NULL,
+                        username VARCHAR(255)  NOT NULL,
+                        mdp VARCHAR(255)  NOT NULL,
+                        email VARCHAR(50)  NOT NULL,
+                        id_poste VARCHAR(50)  NOT NULL,
+                        id_genre VARCHAR(50) NOT NULL ,
+                        PRIMARY KEY(id_employe),
+                        UNIQUE(username),
+                        UNIQUE(email),
+                        FOREIGN KEY(id_poste) REFERENCES Poste(id_poste)
+);
+
+>>>>>>> Stashed changes
 CREATE TABLE Ordinateur(
                            id_ordinateur VARCHAR(50)  default  'ORD'  || LPAD(nextval('ordinateur_id_seq')::text,5,'0'),
                            marque VARCHAR(255)  NOT NULL,
@@ -126,10 +167,8 @@ CREATE TABLE Achat(
 CREATE TABLE Probleme(
                          id_probleme VARCHAR(50)  default  'PRO'  || LPAD(nextval('probleme_id_seq')::text,5,'0'),
                          description VARCHAR(255) ,
-                         id_composant VARCHAR(50)  NOT NULL,
                          id_type_probleme VARCHAR(50) ,
                          PRIMARY KEY(id_probleme),
-                         FOREIGN KEY(id_composant) REFERENCES Composant(id_composant),
                          FOREIGN KEY(id_type_probleme) REFERENCES TypeProbleme(id_type_probleme)
 );
 
@@ -163,4 +202,54 @@ CREATE TABLE MvtStock(
                          FOREIGN KEY(id_achat) REFERENCES Achat(id_achat),
                          FOREIGN KEY(id_reparation_details) REFERENCES ReparationDetails(id_reparation_details),
                          FOREIGN KEY(id_composant) REFERENCES Composant(id_composant)
+);
+
+
+CREATE TABLE Retour(
+                       id_retour VARCHAR(50)  default  'RET'  || LPAD(nextval('retour_id_seq')::text,5,'0'),
+                       description VARCHAR(255)  NOT NULL,
+                       date_retour DATE NOT NULL,
+                       id_client VARCHAR(50)  NOT NULL,
+                       id_composant VARCHAR(50)  NOT NULL,
+                       id_type_retour VARCHAR(50)  NOT NULL,
+                       id_reparation_details VARCHAR(50)  NOT NULL,
+                       PRIMARY KEY(id_retour),
+                       FOREIGN KEY(id_client) REFERENCES Client(id_client),
+                       FOREIGN KEY(id_composant) REFERENCES Composant(id_composant),
+                       FOREIGN KEY(id_type_retour) REFERENCES type_retour_client(id_type_retour),
+                       FOREIGN KEY(id_reparation_details) REFERENCES ReparationDetails(id_reparation_details)
+);
+
+
+
+CREATE TABLE type_retour_client(
+                            id_type_retour VARCHAR(50) default 'TPR'  || LPAD(nextval('type_retour_id_seq')::text,5,'0'),
+                            val VARCHAR(255)  NOT NULL,
+                            PRIMARY KEY(id_type_retour)
+);
+
+CREATE TABLE Recommandation(
+                               id_recommandation VARCHAR(50)  default  'REC'  || LPAD(nextval('recommandation_id_seq')::text,5,'0'),
+                               mois INTEGER NOT NULL,
+                               annee INTEGER NOT NULL,
+                               id_composant VARCHAR(50) ,
+                               PRIMARY KEY(id_recommandation),
+                               FOREIGN KEY(id_composant) REFERENCES Composant(id_composant)
+);
+
+
+CREATE TABLE Genre(
+                      id_genre VARCHAR(50)  default  'GEN'  || LPAD(nextval('genre_id_seq')::text,4,'0'),
+                      val VARCHAR(50)  NOT NULL,
+                      PRIMARY KEY(id_genre)
+);
+
+
+CREATE TABLE Prix_Composant(
+                               id_prix VARCHAR(50)  default  'PRX'  || LPAD(nextval('prix_id_seq')::text,5,'0'),
+                               prix_composant NUMERIC(18,2)   NOT NULL,
+                               date_prix DATE NOT NULL,
+                               id_composant VARCHAR(50)  NOT NULL,
+                               PRIMARY KEY(id_prix),
+                               FOREIGN KEY(id_composant) REFERENCES Composant(id_composant)
 );

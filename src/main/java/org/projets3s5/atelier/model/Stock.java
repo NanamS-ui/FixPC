@@ -82,11 +82,10 @@ public class Stock {
 
     // Méthode pour insérer un nouveau stock
     public void insert(Connection connection) throws SQLException {
-        String query = "INSERT INTO Stock (id_stock, quantite_disponible, id_composant) VALUES (?, ?, ?)";
+        String query = "INSERT INTO Stock (quantite_disponible, id_composant) VALUES ( ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setString(1, this.idStock);
-            pstmt.setInt(2, this.quantiteDisponible);
-            pstmt.setString(3, this.idComposant);
+            pstmt.setInt(1, this.quantiteDisponible);
+            pstmt.setString(2, this.idComposant);
             pstmt.executeUpdate();
         }
     }

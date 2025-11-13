@@ -1,5 +1,7 @@
 package org.projets3s5.atelier.model;
 
+import org.projets3s5.atelier.utils.Utils;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -143,17 +145,16 @@ public class MvtStock {
 
     // Méthode pour insérer un mouvement de stock
     public void insert(Connection connection) throws SQLException {
-        String query = "INSERT INTO MvtStock (id_mvt_stock, date_mouvement, entree, sortie, type_mvt, " +
-                "id_achat, id_reparation_details, id_composant) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO MvtStock (date_mouvement, entree, sortie, type_mvt, " +
+                "id_achat, id_reparation_details, id_composant) VALUES ( ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setString(1, this.idMvtStock);
-            pstmt.setString(2, this.dateMouvement);
-            pstmt.setInt(3, this.entree);
-            pstmt.setInt(4, this.sortie);
-            pstmt.setString(5, this.typeMvt);
-            pstmt.setString(6, this.idAchat);
-            pstmt.setString(7, this.idReparationDetails);
-            pstmt.setString(8, this.idComposant);
+            pstmt.setDate(1, Utils.convertToDate(this.dateMouvement));
+            pstmt.setInt(2, this.entree);
+            pstmt.setInt(3, this.sortie);
+            pstmt.setString(4, this.typeMvt);
+            pstmt.setString(5, this.idAchat);
+            pstmt.setString(6, this.idReparationDetails);
+            pstmt.setString(7, this.idComposant);
             pstmt.executeUpdate();
         }
     }

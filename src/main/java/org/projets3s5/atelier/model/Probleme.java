@@ -10,16 +10,14 @@ import java.util.List;
 public class Probleme {
     private String idProbleme;
     private String description;
-    private String idComposant;
     private String idTypeProbleme;
 
     public Probleme() {
     }
 
-    public Probleme(String idProbleme, String description, String idComposant, String idTypeProbleme) {
+    public Probleme(String idProbleme, String description,String idTypeProbleme) {
         this.idProbleme = idProbleme;
         this.description = description;
-        this.idComposant = idComposant;
         this.idTypeProbleme = idTypeProbleme;
     }
 
@@ -39,13 +37,7 @@ public class Probleme {
         this.description = description;
     }
 
-    public String getIdComposant() {
-        return idComposant;
-    }
 
-    public void setIdComposant(String idComposant) {
-        this.idComposant = idComposant;
-    }
 
     public String getIdTypeProbleme() {
         return idTypeProbleme;
@@ -65,7 +57,6 @@ public class Probleme {
                 problemes.add(new Probleme(
                         rs.getString("id_probleme"),
                         rs.getString("description"),
-                        rs.getString("id_composant"),
                         rs.getString("id_type_probleme")
                 ));
             }
@@ -83,7 +74,6 @@ public class Probleme {
                     return new Probleme(
                             rs.getString("id_probleme"),
                             rs.getString("description"),
-                            rs.getString("id_composant"),
                             rs.getString("id_type_probleme")
                     );
                 }
@@ -94,12 +84,10 @@ public class Probleme {
 
     // Méthode pour insérer un nouveau problème
     public void insert(Connection connection) throws SQLException {
-        String query = "INSERT INTO Probleme (id_probleme, description, id_composant, id_type_probleme) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO Probleme (description, id_type_probleme) VALUES (?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setString(1, this.idProbleme);
-            pstmt.setString(2, this.description);
-            pstmt.setString(3, this.idComposant);
-            pstmt.setString(4, this.idTypeProbleme);
+            pstmt.setString(1, this.description);
+            pstmt.setString(2, this.idTypeProbleme);
             pstmt.executeUpdate();
         }
     }
@@ -109,7 +97,6 @@ public class Probleme {
         String query = "UPDATE Probleme SET description = ?, id_composant = ?, id_type_probleme = ? WHERE id_probleme = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, this.description);
-            pstmt.setString(2, this.idComposant);
             pstmt.setString(3, this.idTypeProbleme);
             pstmt.setString(4, id);
             pstmt.executeUpdate();

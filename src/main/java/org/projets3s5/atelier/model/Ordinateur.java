@@ -117,14 +117,13 @@ public class Ordinateur {
     }
 
     public void insert(Connection connection) throws SQLException {
-        String query = "INSERT INTO Ordinateur (id_ordinateur, marque, modele, id_systeme, id_type_ordi, id_client) VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Ordinateur (marque, modele, id_systeme, id_type_ordi, id_client) VALUES ( ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setString(1, this.idOrdinateur);
-            pstmt.setString(2, this.marque);
-            pstmt.setString(3, this.modele);
-            pstmt.setString(4, this.idSysteme);
-            pstmt.setString(5, this.idTypeOrdi);
-            pstmt.setString(6, this.idClient);
+            pstmt.setString(1, this.marque);
+            pstmt.setString(2, this.modele);
+            pstmt.setString(3, this.idSysteme);
+            pstmt.setString(4, this.idTypeOrdi);
+            pstmt.setString(5, this.idClient);
             pstmt.executeUpdate();
         }
     }
@@ -148,5 +147,35 @@ public class Ordinateur {
             pstmt.setString(1, id);
             pstmt.executeUpdate();
         }
+    }
+
+    public static List<Ordinateur> getComputersWithProblem(Connection connection, String problemId) throws SQLException {
+        List<Ordinateur> ordinateurs = new ArrayList<>();
+
+        String query = "SELECT o.id_ordinateur, o.marque, o.modele, o.id_client " +
+                "FROM Ordinateur o " +
+                "JOIN Reparation r ON o.id_ordinateur = r.id_ordinateur " +
+                "JOIN ReparationDetails rd ON r.id_reparation = rd.id_reparation " +
+                "JOIN Probleme p ON rd.id_probleme = p.id_probleme " +
+                "WHERE p.id_probleme = ? GROUP BY o.id_ordinateur";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, problemId); // Set the problem ID in the query
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String idOrdinateur = rs.getString("id_ordinateur");
+                    String marque = rs.getString("marque");
+                    String modele = rs.getString("modele");
+                    String id_client = rs.getString("id_client");
+
+                    // Create Ordinateur objects and add them to the list
+                    Ordinateur ordinateur = new Ordinateur(idOrdinateur, marque, modele,"","",id_client);
+                    ordinateurs.add(ordinateur);
+                }
+            }
+        }
+
+        return ordinateurs;
     }
 }

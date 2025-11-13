@@ -82,11 +82,10 @@ public class Poste {
 
     // Méthode pour insérer un nouveau poste
     public void insert(Connection connection) throws SQLException {
-        String query = "INSERT INTO Poste (id_poste, val, salaire) VALUES (?, ?, ?)";
+        String query = "INSERT INTO Poste (val, salaire) VALUES ( ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setString(1, this.idPoste);
-            pstmt.setString(2, this.val);
-            pstmt.setDouble(3, this.salaire);
+            pstmt.setString(1, this.val);
+            pstmt.setDouble(2, this.salaire);
             pstmt.executeUpdate();
         }
     }

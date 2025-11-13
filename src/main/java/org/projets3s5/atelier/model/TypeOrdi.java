@@ -69,10 +69,9 @@ public class TypeOrdi {
     }
 
     public void insert(Connection connection) throws SQLException {
-        String query = "INSERT INTO TypeOrdi (id_type_ordi, val) VALUES (?, ?)";
+        String query = "INSERT INTO TypeOrdi (val) VALUES (?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setString(1, this.idTypeOrdi);
-            pstmt.setString(2, this.val);
+            pstmt.setString(1, this.val);
             pstmt.executeUpdate();
         }
     }

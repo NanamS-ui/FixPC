@@ -69,10 +69,9 @@ public class Fournisseur {
     }
 
     public void insert(Connection connection) throws SQLException {
-        String query = "INSERT INTO Fournisseur (id_fournisseur, val) VALUES (?, ?)";
+        String query = "INSERT INTO Fournisseur (val) VALUES (?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setString(1, this.idFournisseur);
-            pstmt.setString(2, this.val);
+            pstmt.setString(1, this.val);
             pstmt.executeUpdate();
         }
     }

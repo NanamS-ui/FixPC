@@ -1,11 +1,15 @@
 package org.projets3s5.atelier.model;
 
+import org.projets3s5.atelier.utils.Utils;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Client {
     private String idClient;
@@ -13,6 +17,8 @@ public class Client {
     private String telephone;
     private String email;
     private String dateInscription;
+
+    private String retour_description;
 
     public Client() {
     }
@@ -23,6 +29,15 @@ public class Client {
         this.telephone = telephone;
         this.email = email;
         this.dateInscription = dateInscription;
+    }
+
+    public Client(String idClient, String nom, String telephone, String email, String dateInscription, String retour_description) {
+        this.idClient = idClient;
+        this.nom = nom;
+        this.telephone = telephone;
+        this.email = email;
+        this.dateInscription = dateInscription;
+        this.retour_description = retour_description;
     }
 
     public String getIdClient() {
@@ -102,13 +117,12 @@ public class Client {
     }
 
     public void insert(Connection connection) throws SQLException {
-        String query = "INSERT INTO Client (id_client, nom, telephone, email, date_inscription) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Client (nom, telephone, email, date_inscription) VALUES ( ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setString(1, this.idClient);
-            pstmt.setString(2, this.nom);
-            pstmt.setString(3, this.telephone);
-            pstmt.setString(4, this.email);
-            pstmt.setString(5, this.dateInscription);
+            pstmt.setString(1, this.nom);
+            pstmt.setString(2, this.telephone);
+            pstmt.setString(3, this.email);
+            pstmt.setDate(4, Utils.convertToDate(this.dateInscription));
             pstmt.executeUpdate();
         }
     }
@@ -131,5 +145,47 @@ public class Client {
             pstmt.setString(1, id);
             pstmt.executeUpdate();
         }
+    }
+
+    public static List<Client> getListClientsByDate(Connection connection, String date) {
+        List<Client> clients = new ArrayList<>();
+        Set<String> clientIds = new HashSet<>(); // Pour éviter les doublons
+
+        String sql = "SELECT DISTINCT id_client, client_nom, client_telephone, client_email, client_date_inscription, retour_description " +
+                "FROM RetourClientComposantView WHERE date_retour = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setDate(1, Utils.convertToDate(date));
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    String idClient = resultSet.getString("id_client");
+                    if (!clientIds.contains(idClient)) {
+                        Client client = new Client(
+                                idClient,
+                                resultSet.getString("client_nom"),
+                                resultSet.getString("client_telephone"),
+                                resultSet.getString("client_email"),
+                                resultSet.getString("client_date_inscription"),
+                                resultSet.getString("retour_description")
+                        );
+                        clients.add(client);
+                        clientIds.add(idClient);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return clients;
+    }
+
+    public String getRetour_description() {
+        return retour_description;
+    }
+
+    public void setRetour_description(String retour_description) {
+        this.retour_description = retour_description;
     }
 }

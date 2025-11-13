@@ -1,5 +1,7 @@
 package org.projets3s5.atelier.model;
 
+import org.projets3s5.atelier.utils.Utils;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -118,15 +120,14 @@ public class Achat {
 
     // Méthode pour insérer un nouvel achat
     public void insert(Connection connection) throws SQLException {
-        String query = "INSERT INTO Achat (id_achat, date_achat, quantite, prix_unitaire, id_fournisseur, id_composant) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Achat (date_achat, quantite, prix_unitaire, id_fournisseur, id_composant) " +
+                "VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setString(1, this.idAchat);
-            pstmt.setString(2, this.dateAchat);
-            pstmt.setInt(3, this.quantite);
-            pstmt.setDouble(4, this.prixUnitaire);
-            pstmt.setString(5, this.idFournisseur);
-            pstmt.setString(6, this.idComposant);
+            pstmt.setDate(1, Utils.convertToDate(this.dateAchat));
+            pstmt.setInt(2, this.quantite);
+            pstmt.setDouble(3, this.prixUnitaire);
+            pstmt.setString(4, this.idFournisseur);
+            pstmt.setString(5, this.idComposant);
             pstmt.executeUpdate();
         }
     }
